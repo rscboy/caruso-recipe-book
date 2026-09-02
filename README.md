@@ -6,7 +6,7 @@ An add-only Codex and Claude Code skill for contributing one recipe at a time to
 
 Download this repository as a ZIP, attach it to Codex or Claude Code, and ask the assistant to review and install the skill. Keep the installed folder name `caruso-recipe-book`.
 
-The owner generates a 30-day add-only guest code from the recipe website's **Add** panel. Paste that guest code into your Codex or Claude chat when the skill asks for it. The assistant uses it for local setup without repeating it. The code cannot edit or delete recipes, and it expires after 30 days; it will remain in your chat history until then.
+The owner generates a 60-day add-only guest code from the recipe website's **Add** panel. Paste that guest code into your Codex or Claude chat the first time the skill asks for it. The assistant saves the connection privately on that computer and reuses it, so you are not asked again during those 60 days. The code cannot edit or delete recipes and will remain in your chat history until it expires.
 
 Then run `$caruso-recipe-book` in Codex or `/caruso-recipe-book` in Claude Code.
 
