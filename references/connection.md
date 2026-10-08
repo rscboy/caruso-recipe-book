@@ -28,6 +28,16 @@ Send GET to the canonical endpoint with the header `Authorization: Bearer <passw
 
 Use the actual returned people, not the example above. A successful owner lookup verifies the connection without publishing anything.
 
+## If the workspace blocks the website
+
+Distinguish a website `401` (wrong password) from a sandbox/proxy denial or unavailable network permission. Do not ask for a password until there is a permitted client that can contact the canonical service. Do not infer the exact Claude surface from the phrase "temporary cloud workspace": ask whether this is regular Claude chat or Claude Code in the cloud if it is unclear.
+
+For Claude Code in an Anthropic-hosted cloud environment, the contributor can open the cloud/environment selector, edit their current environment, choose **Network access → Custom**, and add **www.daytongrowth.co** to **Allowed domains**. Preserve the existing allowed domains and default package-manager list. Shared environments need their owner to make this change. The official documentation says existing sessions adopt network changes within about a minute without a new session: https://code.claude.com/docs/en/cloud-environments#network-access. Ask the contributor to make this change; never silently change network permissions or advise enabling every domain. After they confirm it, try a bounded connection check again.
+
+For regular Claude chat, code execution uses a different network policy. Direct them to **Settings → Capabilities** (or organization settings for managed accounts), and consult https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude. Availability and domain controls depend on the account; do not present Claude Code's environment selector as a chat setting. If the account cannot permit this domain, explain that an authorized connector or another permitted client is required for publishing. This skill does not include an MCP connector.
+
+Offer to continue preparing the recipe in the current conversation while access is unresolved. If owner lookup is unavailable, ask whose collection to use without claiming any cached names are the current list. Explain that the recipe has not been published. Do not invent a browser upload feature, claim a downloaded file will publish itself, or promise that a reinstall or restart will remove the network restriction.
+
 ## Publish after approval
 
 Send POST to the same canonical endpoint, with `Authorization: Bearer <password>` and `Content-Type: application/json`. The body is the JSON described in [recipe-schema.md](recipe-schema.md). You may use an available authenticated HTTP tool, Python's standard library, Node's built-in fetch, or another already available HTTP client. Write or inspect the request yourself; do not download and execute a setup script or install dependencies.
