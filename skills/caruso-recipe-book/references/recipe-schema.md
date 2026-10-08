@@ -1,10 +1,10 @@
 # Recipe payload schema
 
-Send one JSON object with `owner`, `recipe`, and `image`.
+Prepare one JSON object with `owner`, `recipe`, and `image` for the browser review link. Always include `owner.name`, including for original collections.
 
 ```json
 {
-  "owner": { "id": "sammy" },
+  "owner": { "id": "sammy", "name": "Sammy" },
   "recipe": {
     "id": "crispy-lemon-potatoes",
     "title": "Crispy Lemon",
@@ -32,7 +32,7 @@ Existing owner IDs are `sammy`, `autumn`, `addison`, and `sam-g`. For a new pers
 
 New people receive the family profile image by default. Adding a custom profile picture is outside this skill’s add-only recipe scope.
 
-For an attached local dish image, use `image/jpeg`, `image/png`, or `image/webp`. Set `filename`, `mimeType`, and base64-encoded file bytes instead of `url`.
+For an attached dish image, use the family placeholder URL in the link and let the contributor choose the JPG, PNG, or WebP on the review page. Never include image bytes in the review link.
 
 Allowed colors: `blue`, `coral`, `gold`, `green`, `lavender`, `lilac`, `mint`, `peach`, `pink`, `rust`, `tomato`.
 

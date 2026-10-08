@@ -1,53 +1,33 @@
 ---
 name: caruso-recipe-book
-description: Guide a family member through connecting to the Caruso Recipe Book, preparing one recipe, and publishing it after approval. Use for recipe contributions; never edit or delete existing recipes.
+description: Prepare one family recipe and a browser review link for the Caruso Recipe Book. Works in Local or Cloud without contacting the recipe service; the contributor enters the password and approves on the website.
 ---
 
 # Caruso Recipe Book
 
-Take care of connection setup, interview the contributor, prepare one recipe, and publish only after they approve. Contributors only need to paste the starter message and answer your questions. Do not send them away to install software, run Terminal commands, restart their assistant, or download and execute setup scripts.
+Use the same flow in **Local and Cloud**: interview the contributor, prepare a recipe, and give them a browser review link. Their normal browser handles the password and publication. **Do not check access to the recipe service or ask for the password in chat.** A blocked cloud workspace does not prevent preparing a link. Never ask the contributor to run commands, download a ZIP or setup script, install a connector, change network settings, or restart their assistant.
 
-## Read this skill and its references
+Read [references/recipe-schema.md](references/recipe-schema.md) and [references/browser-review.md](references/browser-review.md), resolving them relative to this skill. Source: https://github.com/rscboy/caruso-recipe-book; installable folder: `skills/caruso-recipe-book/`. Reading the instructions is enough to begin in this conversation. If asked to install permanently, use a trusted installer or copy the inspected Markdown to the local assistant's skill folder, preserving unrelated skills. Never claim a temporary cloud folder installs on their computer or account. Installation is optional for this workflow.
 
-The public source is https://github.com/rscboy/caruso-recipe-book. The installable skill is `skills/caruso-recipe-book/`. Read its plain-text files from GitHub, or use the hosted copy at https://www.daytongrowth.co/recipe-book/caruso-recipe-book/SKILL.md. Resolve linked references relative to the skill file's location, not the current project directory. Read [references/connection.md](references/connection.md) for connection setup and HTTP requests, and [references/recipe-schema.md](references/recipe-schema.md) before preparing a recipe payload.
+## Ask one question at a time
 
-When the user asks to install, handle installation yourself using an available trusted skill installer, or copy the inspected skill's Markdown files into `~/.claude/skills/caruso-recipe-book/` for Claude Code or the configured Codex skills directory (normally `~/.codex/skills/caruso-recipe-book/`). Preserve unrelated skills and keep credentials outside that folder. This package has no executable setup scripts. If an older version exists, update only this skill's instruction files. Read the instructions and continue in the current conversation immediately, even if the client's skill menu has not refreshed. Do not require a restart. In a temporary workspace, use the instructions for this conversation and do not claim a permanent installation on the user's computer.
+Accept information already supplied and ask only for what is missing.
 
-Use your available HTTP tools or an available runtime's standard library. No downloaded executable code or third-party packages are needed. A web-reading tool can read the instructions, but publishing requires a client that supports authenticated HTTP requests. Installation success does not prove access to the recipe service. If access is blocked, follow the connection reference's blocked-network guidance before offering a prepared recipe. Never claim setup or publishing succeeded, bypass restrictions, or claim that moving to a local session guarantees access.
+1. **“Whose collection is this for?”** Offer Sammy, Sam G, Autumn, Addison, or somebody else. These are the original collections, not a freshly fetched list. Use IDs `sammy`, `sam-g`, `autumn`, `addison` for those people; derive a lowercase hyphenated ID for a new person. Always include the person's display name in `owner.name`.
+2. **“Share the recipe link or paste the recipe here.”** Read an accessible recipe URL. If it is blocked, ask for the text instead. The recipe website does not need to be reachable from this workspace.
+3. **“Any special notes or changes?”** “No” is a complete answer.
+4. **“Do you have a photo to use?”** Accept a public HTTPS image URL or “no.” For an attached photo, they can choose it on the review page. Never put binary image data in the link. Without an HTTPS image, use the family-book placeholder in the browser reference and identify it honestly.
 
-## Connect for the contributor
+Preserve ingredients, quantities, timing, temperatures, attribution, and notes. Do not invent missing safety-critical instructions. Use the payload schema and put source attribution and contributor notes in `recipe.note`.
 
-Use the connection reference to check for existing local credentials. If the connection is unavailable or unauthorized, ask: **“What is the Recipe Book password?”** Wait for the user's answer. Verify it with an authenticated GET to the add-only recipe service. Do not guess a password or extract one from the website. After verification, save the connection privately on the contributor's computer when local file access is available. In temporary environments, explain only when relevant that the connection may need to be supplied again.
+## Give a review link, never a download
 
-Use the returned recipe owner names for the first interview question. Keep the password out of replies, recipe files, skill files, command arguments, URLs, and logs. Never ask for a GitHub token, Vercel token, general account password, or deployment credential.
+Show a short preview with the collection, title, notes, and photo choice. Generate the review link **offline**, exactly as described in the browser reference, using an available runtime's standard library. Verify it decodes to the exact recipe payload. Never include a password or access token in the link or recipe.
 
-## Ask the recipe questions
+Return a clickable Markdown link labeled **“Review and add your recipe”**. Say: **“Open the link, enter the family password, and click Add this recipe.”** They can choose their own photo there. The browser shows the full recipe before anything is added. Do not demand an extra yes in chat before preparing a link: their explicit **Add this recipe** click is the publishing approval.
 
-Ask one question at a time and wait for the answer. Accept answers supplied in advance and ask only for what is missing.
-
-1. **“Whose recipes are you adding it to?”** Offer the service's returned people, followed by “Add somebody else.” For a new person, ask their display name and derive a lowercase hyphenated ID and initials.
-2. **“What is the link to the recipe, or would you rather copy and paste it here?”** Read an accessible public recipe URL or accept pasted text. If the URL is inaccessible, ask for the recipe text instead.
-3. **“Are there any special notes or instructions I should include?”** “No” is a complete answer.
-4. **“Is there a specific image you want me to use for the dish?”** Accept an HTTPS image URL, an attached JPG/PNG/WebP, or “no.” If no image is supplied, choose a relevant reusable HTTPS image and identify it in the preview.
-
-After these answers, normalize the recipe using the schema reference. Preserve quantities, temperatures, timing, attribution, and special notes. Do not silently invent missing safety-critical temperatures. Choose a specific unique slug. Put source attribution and the user's notes in `recipe.note`. For an attached image, encode it only when preparing the confirmed addition.
-
-Show a concise preview with the owner, title, source, image choice, and special notes. Then ask: **“Ready for me to add this recipe and publish it to the website?”** Wait for an explicit yes. Invoking this skill or supplying the password does not authorize publishing.
-
-## Publish one confirmed recipe
-
-POST the schema's JSON payload to the add-only service using the connection reference. The service appends a recipe and optionally a new person to the canonical website source, then starts its normal production deployment. It cannot update or delete an existing recipe.
-
-On success, report the recipe URL, the returned commit URL, and that the website update has started. Check the recipe URL for a bounded period; claim it is live only when the new recipe is present. If still deploying, provide the link and say the update is underway. Never resubmit a successful addition.
-
-On a timeout or lost response, the recipe may already have been added: verify the recipe URL or ask the website owner to check before retrying. On a rejected request, report the service's safe error and correct the payload only within the user's approved recipe scope.
+The assistant must not call the add API or click the publishing button. Report only “ready to review” until the contributor reports success; generating a link does not save or publish a recipe. If the link is too large or no encoder is available, use the browser reference's copy-and-paste option, never a downloaded JSON file or a nonexistent uploader.
 
 ## Add-only boundary
 
-- Add exactly one recipe per confirmed run.
-- Never edit, replace, reorder, or delete an existing recipe or person.
-- Never use repository or deployment access as a fallback.
-- If asked to modify or delete recipes, explain that the family skill only adds recipes.
-- Connection settings and password files belong outside the skill and recipe files.
-
-For owner maintenance of server-side configuration, read [references/owner-setup.md](references/owner-setup.md). Ordinary contributors do not need that reference.
+Prepare exactly one recipe per run. Never edit, replace, reorder, or delete existing recipes or people. Never request repository write access or deployment credentials, or use them as a fallback. If their normal browser cannot reach the review page, explain that exact limitation; do not promise a skill can overcome browser or account restrictions.
