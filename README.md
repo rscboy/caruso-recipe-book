@@ -1,19 +1,15 @@
 # Caruso Recipe Book
 
-An add-only Codex and Claude Code skill for contributing one recipe at a time to the Caruso family recipe book.
+Paste this message into **Claude Code or Codex**:
 
-## Install
+> Install and use the Caruso Recipe Book skill from https://github.com/rscboy/caruso-recipe-book. Handle setup for me, read the skill instructions, and start helping me add a recipe in this conversation. Ask me for the Recipe Book password when needed.
 
-Download this repository as a ZIP, attach it to Codex or Claude Code, and ask the assistant to review and install the skill. Keep the installed folder name `caruso-recipe-book`.
+Your assistant reads the instructions, handles installation, and asks for the family password. Then it asks whose collection to use, takes a recipe link or pasted recipe, collects your notes and photo choice, and shows a preview. It publishes only after you say yes.
 
-The owner generates a 60-day add-only guest code from the recipe website's **Add** panel. Paste that guest code into your Codex or Claude chat the first time the skill asks for it. The assistant saves the connection privately on that computer and reuses it, so you are not asked again during those 60 days. The code cannot edit or delete recipes and will remain in your chat history until it expires.
+**No ZIP to manage, command file to open, manual setup commands, or restart.** The assistant can read and use the instructions immediately while installing them for future use. Local Claude Code or Codex needs internet access and permission to save the skill and contact the recipe website. A temporary workspace can use the instructions for its current conversation, but cannot install them on your computer.
 
-Then run `$caruso-recipe-book` in Codex or `/caruso-recipe-book` in Claude Code.
+## Package
 
-If an AI environment blocks the recipe website, finish the interview and download the prepared JSON. Open the recipe website in a normal browser and use **Add → Publish a prepared recipe**.
+The installable folder is [`skills/caruso-recipe-book`](skills/caruso-recipe-book). It contains Markdown instructions only, with no executable setup scripts or dependencies. The root [SKILL.md](SKILL.md) mirrors it for assistants opening this repository directly. Credentials are requested separately and saved outside the skill on your computer after verification. They are never included in this public repository.
 
-## Security boundary
-
-This package contains no GitHub, Vercel, or website credentials. Guest codes are saved only on the contributor's computer. The server validates an append-only recipe payload and rejects modifications, replacements, reordering, and deletion.
-
-See [SKILL.md](SKILL.md) for the complete workflow.
+The skill adds one approved recipe at a time through the website's add-only service. It cannot edit or delete existing recipes and does not need GitHub or deployment credentials.
